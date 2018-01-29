@@ -1,5 +1,5 @@
 '''Author: Thomas Cheng
-   Date: May 30, 2017
+   Date: Jan 28, 2018
    Description: This is the the Frogger game. Below are the different additions made
        to pyFrogger.
    
@@ -14,6 +14,7 @@
    v.8 - Added frog, log, life, and vehicle sprites to the game
    v.9 - Added music and sound effects to the game
    v.10 - Added a snake obstacle the player must dodge
+   v.11 - Added varying log speeds each time they move off screen
 '''
 
 # Import and Initialize 
@@ -269,7 +270,7 @@ def main_gameloop(highscore):
             frog.reset() 
             lost_life = True
             timer_bar.reset()
-            
+        
         # checks to see if the frog has collided with the snake
         if snake.rect.colliderect(frog.rect):
             lost_life = True    
