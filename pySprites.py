@@ -1,5 +1,5 @@
 '''Author: Thomas Cheng
-   Date: May 30, 2017
+   Date: Jan 28, 2018
    Description: This is the module that contains all the frogger sprites required
    for the frogger game I created.
 '''
@@ -33,6 +33,7 @@ class Logs(pygame.sprite.Sprite):
         self.rect.center = center
         
         self.__dx = speed
+        self.__original_dx = speed
         self.__screen = screen
         
     def get_speed(self):
@@ -42,17 +43,26 @@ class Logs(pygame.sprite.Sprite):
         
         return self.__dx
     
+    def set_speed(self, new_dx):
+        '''This is the mutator method for the log's speed. This function accepts
+        1 parameter: new_dx, the new speed of the log. This function returns no
+        values'''
+        
+        self.__dx = new_dx
+    
     def update(self):
         '''This function will update the log's current centerx value by
         the "speed" paratmeter passed into the __init__ function. It will also
-        reset the log's position once it has left the screen's boundaries. This 
-        function accepts and returns no values.'''
+        reset the log's position once it has left the screen's boundaries and call
+        the alternate speed method. This function accepts and returns no values.'''
         
         self.rect.centerx += self.__dx
         if (self.rect.right < 0):
             self.rect.left = self.__screen.get_width()
+            self.alternate_speed()
         elif self.rect.left > self.__screen.get_width():
             self.rect.right = 0
+            self.alternate_speed()
     
     def speed_up(self, factor):
         '''This function will increase the absolute value of self.__dx by a certain
@@ -61,9 +71,30 @@ class Logs(pygame.sprite.Sprite):
     
         if self.__dx > 0:
             self.__dx += factor
+            self.__original_dx += factor
         elif self.__dx < 0:
             self.__dx -= factor
+            self.__original_dx -= factor
+    
+    def alternate_speed(self):
+        '''This function will randomly increase or decrease the speed of the logs.
+        This function accepts and returns no values'''
+        
+        if self.__dx < 0:
+            random_interval = random.randint(-3, 0)
+        elif self.__dx > 0:
+            random_interval = random.randint(0, 3)
             
+        self.__dx = self.__original_dx
+        self.__dx += random_interval
+        
+    def match_speed(self, dx1, dx2):
+        '''This function will match the speed of logs that collide with each other.
+        This function accepts 2 parameters: dx1 and dx2, speeds of the 2 respective
+        logs. This function returns no values.'''
+        
+        self.__dx = min( dx1, dx2 )
+
 
 class Frog(pygame.sprite.Sprite):
     '''This Frog class is used to create a player object for the use to interact
